@@ -1,4 +1,4 @@
 AUTOMAKE_OPTIONS = foreign
-EXTRA_DIST = dot.idle_timer.sample
+EXTRA_DIST = dot.idletimer.sample
 SUBDIRS = src
 DIST_SUBDIRS = $(SUBDIRS)
