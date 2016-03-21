@@ -147,6 +147,56 @@ static void test_parse_config_too_long_line_error()
 }
 
 
+static bool config_error_handler_returns_false(
+    ConfigErrorType type, const char* filename, int line_number)
+{
+    return false;
+}
+
+
+static void test_parse_config_stop_on_error()
+{
+    char test_input[] = "idle:1:test.sh\n"
+                        "*** ILLEGAL LINE ***\n"
+                        "wakeup:30:wakeup.sh\n";
+    FILE* f = fmemopen(test_input, sizeof(test_input), "r");
+    clear_config_error();
+
+    Config* p = parse_config(f, "test.conf", config_error_handler_returns_false);
+
+    CU_ASSERT_STRING_EQUAL(find_equals(p->idle_commands, 1)[0], "test.sh");
+    CU_ASSERT_TRUE(is_command_map_empty(p->wakeup_commands));
+
+    fclose(f);
+    delete_config(p);
+}
+
+
+static bool config_error_handler_returns_true(
+    ConfigErrorType type, const char* filename, int line_number)
+{
+    return true;
+}
+
+
+static void test_parse_config_continue_on_error()
+{
+    char test_input[] = "idle:1:test.sh\n"
+                        "*** ILLEGAL LINE ***\n"
+                        "wakeup:30:wakeup.sh\n";
+    FILE* f = fmemopen(test_input, sizeof(test_input), "r");
+    clear_config_error();
+
+    Config* p = parse_config(f, "test.conf", config_error_handler_returns_true);
+
+    CU_ASSERT_STRING_EQUAL(find_equals(p->idle_commands, 1)[0], "test.sh");
+    CU_ASSERT_STRING_EQUAL(find_equals(p->wakeup_commands, 30)[0], "wakeup.sh");
+
+    fclose(f);
+    delete_config(p);
+}
+
+
 int main(int argc, char* argv[])
 {
     CU_TestInfo tests[] = {
@@ -163,6 +213,10 @@ int main(int argc, char* argv[])
             test_parse_config_illegal_line_format_error },
         { "test_parse_config_too_long_line_error",
             test_parse_config_too_long_line_error },
+        { "test_parse_config_stop_on_error",
+            test_parse_config_stop_on_error },
+        { "test_parse_config_continue_on_error",
+            test_parse_config_continue_on_error },
         CU_TEST_INFO_NULL
     };
     CU_SuiteInfo suites[] = {
