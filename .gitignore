@@ -1,0 +1,14 @@
+Makefile*
+!Makefile.am
+config*
+!configure.ac
+.deps
+*.o
+*.a
+*.log
+*.trs
+aclocal.m4
+autom4te.cache
+stamp-h1
+src/idletimer
+src/test/*_test
