@@ -39,7 +39,7 @@ If you wake up your system after idling in 60 minutes or above,
 then idletimer executes `~/bin/wakeup.py` with python.
 
 
-Idletimer passes a whole text after the second ':' to `system()` function.
+Idletimer passes a whole text after the second `:` to `system()` function.
 
 
 ## Command Line Options
