@@ -161,3 +161,24 @@ void delete_found_commands(const char** p)
 {
     free(p);
 }
+
+
+void traverse_command_map(
+    const CommandMap* p,
+    bool (*handler)(void* data, unsigned long minutes, const char* command),
+    void* data)
+{
+    assert(p);
+    assert(handler);
+
+    int i, j;
+
+    for (i = 0; i < p->num_of_command_arrays; i++) {
+        unsigned long idle_minutes = p->command_arrays[i]->idle_minutes;
+        int n = p->command_arrays[i]->num_of_commands;
+        char** commands = p->command_arrays[i]->commands;
+        for (j = 0; j < n; j++) {
+            handler(data, idle_minutes, commands[j]);
+        }
+    }
+}

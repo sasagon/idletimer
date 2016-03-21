@@ -13,4 +13,9 @@ const char*const* find_equals(const CommandMap*, unsigned long minutes);
 const char** find_less_equals(const CommandMap*, unsigned long minutes);
 void delete_found_commands(const char**);
 
+void traverse_command_map(
+    const CommandMap*,
+    bool (*handler)(void* data, unsigned long minutes, const char* command),
+    void* data);
+
 #endif
