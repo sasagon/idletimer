@@ -20,13 +20,13 @@ static void test_parse_config()
                         "idle:1:test.sh\n"
                         "wakeup:30:wakeup.sh\n";
     FILE* f = fmemopen(test_input, sizeof(test_input), "r");
-    Config* p = parse_config(NULL, f);
+    Config* p = parse_config(f, NULL);
 
     CU_ASSERT_STRING_EQUAL(find_equals(p->idle_commands, 1)[0], "test.sh");
     CU_ASSERT_STRING_EQUAL(find_equals(p->wakeup_commands, 30)[0], "wakeup.sh");
 
     fclose(f);
-    delete_settings(p);
+    delete_config(p);
 }
 
 
