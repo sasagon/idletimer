@@ -43,7 +43,7 @@ or
 
     $ make install bindir=$HOME/bin
 
-And you must prepare a configuration file (normally ~/.idletimer).
+And you must prepare a configuration file (normally `~/.idletimer`).
 
     $ cp dot.idletimer.sample ~/.idletimer
     $ vi ~/.idletimer     # edit with your favorite editor

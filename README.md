@@ -16,30 +16,30 @@ for background.
 
 `~/.idletimer` contains one or more lines which consist of 3 itmes below:
 
-  - execution type ('idle' or 'wakeup')
+  - execution type (`idle` or `wakeup`)
   - idling minute(s)
-  - command line
+  - command line text
 
-which are separated with ':'.
+which are separated with `:`.
 
 
-ex.1)
+Ex.1)
 
-    idle:3:idling3min.sh
+    idle:3:~/bin/idling3min.sh
 
 If your system does not detect any keyboard or mouse input for 3 minutes,
-then idletimer executes "idling3min.sh".
+then idletimer executes `~/bin/idling3min.sh`
 
 
-ex.2)
+Ex.2)
 
-    wakeup:60:wakeup.sh
+    wakeup:60:python ~/bin/wakeup.py
 
 If you wake up your system after idling in 60 minutes or above, 
-then idletimer executes "wakeup.sh".
+then idletimer executes `~/bin/wakeup.py` with python.
 
 
-Idletimer command passes a whole string after second ':' to system() function.
+Idletimer passes a whole text after the second ':' to `system()` function.
 
 
 ## Command Line Options
