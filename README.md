@@ -2,7 +2,7 @@ IDLE TIMER
 ==========
 
 Idletimer behaves like a screen saver except that it does not blank screens
-and wake them up but executes preconfigured commands in $HOME/.idletimer.
+and wake them up but executes preconfigured commands in `~/.idletimer`.
 
 ## Usage & Examples
 
@@ -14,7 +14,7 @@ or
 
 for background.
 
-"$HOME/.idletimer" contains one or more lines which consist of 3 itmes below:
+`~/.idletimer` contains one or more lines which consist of 3 itmes below:
 
   - execution type ('idle' or 'wakeup')
   - idling minute(s)
@@ -40,6 +40,13 @@ then idletimer executes "wakeup.sh".
 
 
 Idletimer command passes a whole string after second ':' to system() function.
+
+
+## Command Line Options
+
+    -h                 print help message.
+    -v                 print configurations and actions verbosely.
+    -c config_file     specify a config file instead of ~/.idletimer
 
 
 ## Requirements
