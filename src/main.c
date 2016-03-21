@@ -7,7 +7,7 @@
 #include "idle_timer.h"
 #include "config_parser.h"
 
-#define DOTFILE_NAME   ".idle_timer"
+#define DOTFILE_NAME   ".idletimer"
 
 static void sigint_handler(int sig)
 {

@@ -1,5 +1,5 @@
 #ifdef HAVE_CONFIG_H
-#include "../src/config.h"
+#include "../config.h"
 
 #ifdef HAVE_CUNIT_CUNIT_H
 //#ifdef HAVE_LIBCUNIT
@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
-#include "command_map.h"
+#include "../command_map.h"
 
 
 static void test_is_command_map_empty()

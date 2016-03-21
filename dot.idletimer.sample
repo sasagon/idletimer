@@ -7,8 +7,5 @@ idle:3:idling_in_3min.sh
 # if your system has been idle for just 10 minutes, then execute the command.
 idle:10:idling_in_10min.sh
 
-# if your system wakes after no matter how short idle time, then execute the command.
-wakeup:0:wakeup.sh
-
 # if your system wakes after idling in 300 minutes or above, then execute the command.
 wakeup:300:python ~/bin/timecard.py

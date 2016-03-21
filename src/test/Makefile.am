@@ -1,8 +1,6 @@
 TESTS = idle_timer_test command_map_test config_parser_test
 #dist_noinst_DATA = $(TESTS)
 
-AM_CFLAGS = -I..
-
 check_PROGRAMS = idle_timer_test command_map_test config_parser_test
 
 idle_timer_test_SOURCES = idle_timer_test.c

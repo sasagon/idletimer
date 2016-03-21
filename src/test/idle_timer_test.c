@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
-#include "idle_timer.h"
+#include "../idle_timer.h"
 
 #define MAX_IDLE_MINUTES 3
 
