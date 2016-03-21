@@ -77,14 +77,25 @@ static bool config_error_handler(
     assert(filename);
 
     switch (type) {
+    case NO_ERROR:
+        return true;
     case TOO_LONG_LINE:
         fprintf(stderr, "Warning: %s:%d: too long line.\n", filename, line_number);
         return true;
     case TOO_SHORT_MINUTES:
         fprintf(stderr, "Warning: %s:%d: 0 minute not allowed.\n", filename, line_number);
         return true;
+    case TOO_LONG_MINUTES:
+        fprintf(stderr, "Warning: %s:%d: too long minute specified.\n", filename, line_number);
+        return true;
+    case ILLEGAL_COMMAND_TYPE:
+        fprintf(stderr, "Warning: %s:%d: line must start with 'idle' or 'wakeup'.\n", filename, line_number);
+        return true;
+    case ILLEGAL_MINUTES:
+        fprintf(stderr, "Warning: %s:%d: illegal minutes string found.\n", filename, line_number);
+        return true;
     case ILLEGAL_LINE_FORMAT:
-        fprintf(stderr, "Warning: %s:%d: illegal line.\n", filename, line_number);
+        fprintf(stderr, "Warning: %s:%d: illegal line format.\n", filename, line_number);
         return true;
     default:
         fprintf(stderr, "Error: %s:%d: unknown error.\n", filename, line_number);
