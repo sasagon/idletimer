@@ -1,58 +1,69 @@
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include <assert.h>
 #include <glib.h>
 #include "config_parser.h"
 
-#define MAX_LINE_LENGTH   4096
-#define COMMENT_CHAR      '#'
-#define DELIMITER         ":"
 #define NUMBER_OF_COLUMNS 3
 
-#define SUCCESS 0
-#define FAIL    -1
 
-static int parse_line(Config* p, const char* s)
+static bool parse_line(Config* p, const char* s,
+    config_error_handler_t error_handler, const char* filename, int line_number)
 {
-    assert(p);
     assert(s);
+    assert(error_handler);
 
-    gchar** t = g_strsplit(s, DELIMITER, NUMBER_OF_COLUMNS);
+    gchar** t = g_strsplit(s, CONFIG_PARSER_DELIMITER, NUMBER_OF_COLUMNS);
+    char* endptr = NULL;
 
     if (g_strv_length(t) == NUMBER_OF_COLUMNS) {
-      unsigned long minute = strtoul(t[1], NULL, 10);
-      if (strcmp(t[0], "idle") == 0) {
-          add_command(p->idle_commands, minute, t[2]);
-      } else if (strcmp(t[0], "wakeup") == 0) {
-          add_command(p->wakeup_commands, minute, t[2]);
-      } else {
-          g_strfreev(t);
-          return FAIL;
-      }
+        unsigned long minute = strtoul(t[1], &endptr, 10);
+        if (endptr == t[1] || *endptr != '\0') {
+            g_strfreev(t);
+            return error_handler(ILLEGAL_MINUTES, filename, line_number);
+        } else if (minute == 0) {
+            g_strfreev(t);
+            return error_handler(TOO_SHORT_MINUTES, filename, line_number);
+        } else if (minute == ULONG_MAX) {
+            g_strfreev(t);
+            return error_handler(TOO_LONG_MINUTES, filename, line_number);
+        }
+        if (strcmp(t[0], "idle") == 0) {
+            add_command(p->idle_commands, minute, t[2]);
+        } else if (strcmp(t[0], "wakeup") == 0) {
+            add_command(p->wakeup_commands, minute, t[2]);
+        } else {
+            g_strfreev(t);
+            return error_handler(ILLEGAL_COMMAND_TYPE, filename, line_number);
+        }
+    } else {
+        g_strfreev(t);
+        return error_handler(ILLEGAL_LINE_FORMAT, filename, line_number);
     }
     g_strfreev(t);
-    return SUCCESS;
+    return true;
 }
 
 
-Config* parse_config(FILE* f, const char* filename)
+Config* parse_config(
+    FILE* f, const char* filename, config_error_handler_t error_handler)
 {
     assert(f);
+    assert(error_handler);
 
     Config* p = malloc(sizeof(Config));
     p->idle_commands = create_command_map();
     p->wakeup_commands = create_command_map();
 
     int line_number = 0;
-    char line_buffer[MAX_LINE_LENGTH + 2];
+    char line_buffer[CONFIG_PARSER_MAX_LINE_LENGTH + 2];
     bool line_continued = false;
 
     while (fgets(line_buffer, sizeof(line_buffer), f) != NULL) {
         line_number++;
-        if (strlen(line_buffer) > MAX_LINE_LENGTH) {
-            if (filename != NULL) {
-              fprintf(stderr, "Warning: %s:%d: too long line\n", filename, line_number);
+        if (strlen(line_buffer) > CONFIG_PARSER_MAX_LINE_LENGTH) {
+            if (!error_handler(TOO_LONG_LINE, filename, line_number)) {
+                break;
             }
             line_continued = true;
             continue;
@@ -65,18 +76,14 @@ Config* parse_config(FILE* f, const char* filename)
         if (t != NULL) {
             *t = '\0';
         }
-        if (*line_buffer == COMMENT_CHAR) {
+        if (*line_buffer == CONFIG_PARSER_COMMENT_CHAR) {
             continue;
         } else if (*line_buffer == '\0') {
             continue;
         }
-        if (parse_line(p, line_buffer) != SUCCESS) {
-            fprintf(stderr, "Warning: %s:%d: illegal line\n", filename, line_number);
+        if (!parse_line(p, line_buffer, error_handler, filename, line_number)) {
+            break;
         }
-    }
-    if (is_command_map_empty(p->idle_commands)
-     && is_command_map_empty(p->wakeup_commands)) {
-        fprintf(stderr, "Error: %s: no effective lines\n", filename);
     }
     return p;
 }

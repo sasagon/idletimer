@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <errno.h>
 #include <assert.h>
@@ -70,6 +71,28 @@ static void set_timer_handlers(IdleTimer* idle_timer, const Config* config)
 }
 
 
+static bool config_error_handler(
+    ConfigErrorType type, const char* filename, int line_number)
+{
+    assert(filename);
+
+    switch (type) {
+    case TOO_LONG_LINE:
+        fprintf(stderr, "Warning: %s:%d: too long line.\n", filename, line_number);
+        return true;
+    case TOO_SHORT_MINUTES:
+        fprintf(stderr, "Warning: %s:%d: 0 minute not allowed.\n", filename, line_number);
+        return true;
+    case ILLEGAL_LINE_FORMAT:
+        fprintf(stderr, "Warning: %s:%d: illegal line.\n", filename, line_number);
+        return true;
+    default:
+        fprintf(stderr, "Error: %s:%d: unknown error.\n", filename, line_number);
+        return false;
+    }
+}
+
+
 static Config* load_config()
 {
     gchar* dotfile_path = g_build_filename(g_get_home_dir(), DOTFILE_NAME, NULL);
@@ -78,8 +101,14 @@ static Config* load_config()
         fprintf(stderr, "Error: %s: %s\n", dotfile_path, strerror(errno));
         exit(EXIT_FAILURE);
     }
-    Config* config = parse_config(f, dotfile_path);
+    Config* config = parse_config(f, dotfile_path, &config_error_handler);
     fclose(f);
+
+    if (is_command_map_empty(config->idle_commands)
+     && is_command_map_empty(config->wakeup_commands)) {
+        fprintf(stderr, "Error: %s: no effective lines.\n", dotfile_path);
+        exit(EXIT_FAILURE);
+    }
     g_free(dotfile_path);
     return config;
 }
