@@ -11,6 +11,7 @@
 
 #define VERSION        "0.1"
 #define DOTFILE_NAME   ".idletimer"
+#define TIMEBUFF_SIZE  1024
 
 static void sigint_handler(int sig)
 {
@@ -34,6 +35,20 @@ static void set_signal_handlers()
 }
 
 
+static void print_execution_log(const char* command)
+{
+    assert(command);
+
+    char s[TIMEBUFF_SIZE];
+    time_t timer;
+    struct tm* timeptr;
+    timer = time(NULL);
+    timeptr = localtime(&timer);
+    strftime(s, sizeof(s), "%F %T", timeptr);
+    fprintf(stdout, "%s %s\n", s, command);
+}
+
+
 static void exec_commands(const char*const* commands)
 {
     assert(commands);
@@ -41,8 +56,9 @@ static void exec_commands(const char*const* commands)
     int i;
 
     for (i = 0; commands[i]; i++) {
+        print_execution_log(commands[i]);
         if (system(commands[i]) != 0) {
-          fprintf(stderr, "Error: command execution failed: %s\n", commands[i]);
+            fprintf(stdout, "Error: execution failed: %s\n", commands[i]);
         }
     }
 }

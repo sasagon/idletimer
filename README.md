@@ -10,7 +10,7 @@ and wake them up but executes preconfigured commands in `~/.idletimer`.
 
 or
 
-    $ idletimer &
+    $ idletimer > /dev/null &
 
 for background.
 
@@ -22,7 +22,7 @@ for background.
 
 which are separated with `:`.
 
-Idletimer passes a whole text after the second `:` to `system()` function.
+Idletimer passes whole text after the second `:` to `system()` function.
 So you can use shell functions here.
 
 
