@@ -22,6 +22,9 @@ for background.
 
 which are separated with `:`.
 
+Idletimer passes a whole text after the second `:` to `system()` function.
+So you can use shell functions here.
+
 
 Ex.1)
 
@@ -33,13 +36,18 @@ then idletimer executes `~/bin/idling3min.sh`
 
 Ex.2)
 
-    wakeup:60:python ~/bin/wakeup.py
+    idle:10:date "+%F %T idle" -d "@$((`date +%s` - 60 * 10))" >> ~/idle.log
 
-If you wake up your system after idling in 60 minutes or above, 
-then idletimer executes `~/bin/wakeup.py` with python.
+If your system has been idle for just 10 minutes,
+then write the time to start idling (10 minutes before) to a log file.
 
 
-Idletimer passes a whole text after the second `:` to `system()` function.
+Ex.3)
+
+    wakeup:300:python ~/bin/timecard.py >> ~/timecard.log
+
+If you wake up your system after idling in 300 minutes or above, 
+then idletimer executes `~/bin/timecard.py` with python interpreter.
 
 
 ## Command Line Options
