@@ -1,11 +1,16 @@
-# sample config file for idle_timer command
-# copy this file to $HOME/.idle_timer
+# sample configuration file for idletimer
+# copy this file to $HOME/.idletimer and edit as you need.
 
-# if your system has been idle for just 3 minutes, then execute the command.
-idle:3:idling_in_3min.sh
+# If your system has been idle for 1 minute, then execute the command.
+#idle:1:~/bin/test.sh
 
-# if your system has been idle for just 10 minutes, then execute the command.
-idle:10:idling_in_10min.sh
+# If your system has been idle for just 10 minutes,
+# then write idling start time to log file.
+idle:10:date "+%F %T idle" -d "@$((`date +%s` - 60 * 10))" >> ~/idle.log
 
-# if your system wakes after idling in 300 minutes or above, then execute the command.
-wakeup:300:python ~/bin/timecard.py
+# If your system wakes after idling in 10 minutes or above,
+# then write current time to log file.
+wakeup:10:date "+%F %T wakeup" >> ~/idle.log
+
+# If your system wakes after idling in 300 minutes or above, then execute the command.
+#wakeup:300:python ~/bin/timecard.py | xargs echo `date +"%F %T"` >> ~/timecard.log
