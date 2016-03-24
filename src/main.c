@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <stdbool.h>
 #include <string.h>
 #include <errno.h>
@@ -11,7 +12,6 @@
 
 #define VERSION        "0.1"
 #define DOTFILE_NAME   ".idletimer"
-#define TIMEBUFF_SIZE  1024
 
 static void sigint_handler(int sig)
 {
@@ -35,17 +35,36 @@ static void set_signal_handlers()
 }
 
 
-static void print_execution_log(const char* command)
-{
-    assert(command);
+static bool verbose_mode = false;
 
-    char s[TIMEBUFF_SIZE];
-    time_t timer;
-    struct tm* timeptr;
-    timer = time(NULL);
-    timeptr = localtime(&timer);
-    strftime(s, sizeof(s), "%F %T", timeptr);
-    fprintf(stdout, "%s %s\n", s, command);
+static void set_verbose_mode(bool b)
+{
+    verbose_mode = b;
+    if (b) {
+        setvbuf(stdout, NULL, _IOLBF, BUFSIZ);
+    }
+}
+
+static void print_verbose_log(const char* format, ...)
+{
+    assert(format);
+
+    if (verbose_mode) {
+        va_list arg;
+        va_start(arg, format);
+        vfprintf(stdout, format, arg);
+        va_end(arg);
+    }
+}
+
+static void print_error_log(const char* format, ...)
+{
+    assert(format);
+
+    va_list arg;
+    va_start(arg, format);
+    vfprintf((verbose_mode)? stdout : stderr, format, arg);
+    va_end(arg);
 }
 
 
@@ -56,9 +75,9 @@ static void exec_commands(const char*const* commands)
     int i;
 
     for (i = 0; commands[i]; i++) {
-        print_execution_log(commands[i]);
+        print_verbose_log("Execute: %s\n", commands[i]);
         if (system(commands[i]) != 0) {
-            fprintf(stdout, "Error: execution failed: %s\n", commands[i]);
+            print_error_log("Execution failed: %s\n", commands[i]);
         }
     }
 }
@@ -67,17 +86,26 @@ static void exec_commands(const char*const* commands)
 static void idle_listener(unsigned long idle_minutes, void* data)
 {
     assert(data);
+
     const CommandMap* idle_commands = (CommandMap*)data;
-    exec_commands(find_equals(idle_commands, idle_minutes));
+    const char*const* commands = find_equals(idle_commands, idle_minutes);
+    if (commands[0] != NULL) {
+        print_verbose_log("Idling for %lu minute(s).\n", idle_minutes);
+        exec_commands(commands);
+    }
 }
 
 
 static void wakeup_listener(unsigned long idle_minutes, void* data)
 {
     assert(data);
+
     const CommandMap* wakeup_commands = (CommandMap*)data;
     const char** commands = find_less_equals(wakeup_commands, idle_minutes);
-    exec_commands(commands);
+    if (commands[0] != NULL) {
+        print_verbose_log("Wake up after %lu minute(s) idling.\n", idle_minutes);
+        exec_commands(commands);
+    }
     delete_found_commands(commands);
 }
 
@@ -237,8 +265,12 @@ int main(int argc, char* argv[])
     set_signal_handlers();
 
     Config* config = load_config(options.config_file_path);
+
     if (options.verbose) {
+        set_verbose_mode(true);
+        print_verbose_log("%s loaded.\n", options.config_file_path);
         print_config(config);
+        print_verbose_log("Watching your input...\n");
     }
 
     IdleTimer* idle_timer = create_idle_timer();
