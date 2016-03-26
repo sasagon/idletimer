@@ -25,7 +25,8 @@ AC_CHECK_LIB(Xss, XScreenSaverQueryInfo,,
 
 # Checks for header files.
 AC_PATH_X
-AC_CHECK_HEADERS([stdlib.h string.h])
+AC_CHECK_HEADER_STDBOOL
+AC_CHECK_HEADERS([stdlib.h string.h limits.h])
 AC_CHECK_HEADERS([CUnit/CUnit.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -33,7 +34,7 @@ AC_CHECK_HEADERS([CUnit/CUnit.h])
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([strdup])
+AC_CHECK_FUNCS([strdup, strpbrk, strtoul, strerror, memset])
 
 case "$gtk3_enabled" in
 yes)
