@@ -1,7 +1,7 @@
 IDLE TIMER
 ==========
 
-[![Build Status](https://travis-ci.org/sasagon/idletimer?branch=master)]
+[![Build Status](https://travis-ci.org/sasagon/idletimer.png?branch=master)]
 (https://travis-ci.org/sasagon/idletimer)
 
 Idletimer behaves like a screen saver except that it does not blank screens
