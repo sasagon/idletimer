@@ -1,6 +1,9 @@
 IDLE TIMER
 ==========
 
+[![Build Status](https://travis-ci.org/sasagon/idletimer?branch=master)]
+(https://travis-ci.org/sasagon/idletimer)
+
 Idletimer behaves like a screen saver except that it does not blank screens
 and wake them up but executes preconfigured commands in `~/.idletimer`.
 
