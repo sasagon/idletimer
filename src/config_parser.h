@@ -24,9 +24,11 @@ typedef struct {
 } Config; 
 
 typedef bool (*config_error_handler_t)(
-    ConfigErrorType, const char* filename, int line_number);
+    ConfigErrorType, const char* filename, int line_number, void* data);
 
-Config* parse_config(FILE*, const char* filename, config_error_handler_t);
+Config* parse_config(
+    FILE*, const char* filename, config_error_handler_t, void* data);
+
 void delete_config(Config*);
 
 int get_num_of_commands_in_config(Config*);

@@ -8,7 +8,8 @@
 
 
 static bool parse_line(Config* p, const char* s,
-    config_error_handler_t error_handler, const char* filename, int line_number)
+    config_error_handler_t error_handler,
+    const char* filename, int line_number, void* data)
 {
     assert(s);
     assert(error_handler);
@@ -20,13 +21,13 @@ static bool parse_line(Config* p, const char* s,
         unsigned long minute = strtoul(t[1], &endptr, 10);
         if (endptr == t[1] || *endptr != '\0') {
             g_strfreev(t);
-            return error_handler(ILLEGAL_MINUTES, filename, line_number);
+            return error_handler(ILLEGAL_MINUTES, filename, line_number, data);
         } else if (minute == 0) {
             g_strfreev(t);
-            return error_handler(TOO_SHORT_MINUTES, filename, line_number);
+            return error_handler(TOO_SHORT_MINUTES, filename, line_number, data);
         } else if (minute == ULONG_MAX) {
             g_strfreev(t);
-            return error_handler(TOO_LONG_MINUTES, filename, line_number);
+            return error_handler(TOO_LONG_MINUTES, filename, line_number, data);
         }
         if (strcmp(t[0], "idle") == 0) {
             add_command(p->idle_commands, minute, t[2]);
@@ -34,11 +35,11 @@ static bool parse_line(Config* p, const char* s,
             add_command(p->wakeup_commands, minute, t[2]);
         } else {
             g_strfreev(t);
-            return error_handler(ILLEGAL_COMMAND_TYPE, filename, line_number);
+            return error_handler(ILLEGAL_COMMAND_TYPE, filename, line_number, data);
         }
     } else {
         g_strfreev(t);
-        return error_handler(ILLEGAL_LINE_FORMAT, filename, line_number);
+        return error_handler(ILLEGAL_LINE_FORMAT, filename, line_number, data);
     }
     g_strfreev(t);
     return true;
@@ -46,7 +47,8 @@ static bool parse_line(Config* p, const char* s,
 
 
 Config* parse_config(
-    FILE* f, const char* filename, config_error_handler_t error_handler)
+    FILE* f, const char* filename,
+    config_error_handler_t error_handler, void* data)
 {
     assert(f);
     assert(error_handler);
@@ -62,7 +64,7 @@ Config* parse_config(
     while (fgets(line_buffer, sizeof(line_buffer), f) != NULL) {
         line_number++;
         if (strlen(line_buffer) > CONFIG_PARSER_MAX_LINE_LENGTH) {
-            if (!error_handler(TOO_LONG_LINE, filename, line_number)) {
+            if (!error_handler(TOO_LONG_LINE, filename, line_number, data)) {
                 break;
             }
             line_continued = true;
@@ -81,7 +83,7 @@ Config* parse_config(
         } else if (*line_buffer == '\0') {
             continue;
         }
-        if (!parse_line(p, line_buffer, error_handler, filename, line_number)) {
+        if (!parse_line(p, line_buffer, error_handler, filename, line_number, data)) {
             break;
         }
     }

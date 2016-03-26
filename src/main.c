@@ -141,7 +141,7 @@ static const char* config_error_format(ConfigErrorType type)
 
 
 static bool config_error_handler(
-    ConfigErrorType type, const char* filename, int line_number)
+    ConfigErrorType type, const char* filename, int line_number, void* data)
 {
     assert(filename);
 
@@ -168,7 +168,8 @@ static Config* load_config(const char* prgname, const char* config_file_path)
             prgname, config_file_path, strerror(errno));
         exit(EXIT_FAILURE);
     }
-    Config* config = parse_config(f, config_file_path, &config_error_handler);
+    Config* config = parse_config(
+                        f, config_file_path, &config_error_handler, NULL);
     fclose(f);
 
     if (is_command_map_empty(config->idle_commands)
