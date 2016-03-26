@@ -27,6 +27,22 @@ static void test_is_command_map_empty()
 }
 
 
+static void test_get_num_of_entries_in_command_map()
+{
+    CommandMap* p = create_command_map();
+
+    CU_ASSERT_EQUAL(get_num_of_entries_in_command_map(p), 0);
+
+    add_command(p, 1, "A");
+    add_command(p, 1, "B");
+    add_command(p, 2, "C");
+
+    CU_ASSERT_EQUAL(get_num_of_entries_in_command_map(p), 3);
+
+    delete_command_map(p);
+}
+
+
 static void test_find_equals()
 {
     CommandMap* p = create_command_map();
@@ -81,6 +97,9 @@ static void test_find_less_equals()
 int main(int argc, char* argv[])
 {
     CU_TestInfo tests[] = {
+        { "test_is_command_map_empty", test_is_command_map_empty },
+        { "test_get_num_of_entries_in_command_map",
+                          test_get_num_of_entries_in_command_map },
         { "test_find_equals", test_find_equals },
         { "test_find_less_equals", test_find_less_equals },
         CU_TEST_INFO_NULL

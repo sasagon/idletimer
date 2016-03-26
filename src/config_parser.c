@@ -96,3 +96,12 @@ void delete_config(Config* p)
         delete_command_map(p->idle_commands);
     }
 }
+
+
+int get_num_of_entries_in_config(Config* p)
+{
+    assert(p);
+    return
+      get_num_of_entries_in_command_map(p->idle_commands) +
+      get_num_of_entries_in_command_map(p->wakeup_commands);
+}

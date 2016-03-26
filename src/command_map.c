@@ -113,6 +113,19 @@ bool is_command_map_empty(const CommandMap* p)
 }
 
 
+int get_num_of_entries_in_command_map(const CommandMap* p)
+{
+    assert(p);
+
+    int i, n = 0;
+
+    for (i = 0; i < p->num_of_command_arrays; i++) {
+        n += p->command_arrays[i]->num_of_commands;
+    }
+    return n;
+}
+
+
 const char*const* find_equals(const CommandMap* p, unsigned long idle_minutes)
 {
     assert(p);

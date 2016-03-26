@@ -90,7 +90,7 @@ static void idle_listener(unsigned long idle_minutes, void* data)
     const CommandMap* idle_commands = (CommandMap*)data;
     const char*const* commands = find_equals(idle_commands, idle_minutes);
     if (commands[0] != NULL) {
-        print_verbose_log("Idling for %lu minute(s).\n", idle_minutes);
+        print_verbose_log("*** Idling for %lu minute(s).\n", idle_minutes);
         exec_commands(commands);
     }
 }
@@ -103,7 +103,7 @@ static void wakeup_listener(unsigned long idle_minutes, void* data)
     const CommandMap* wakeup_commands = (CommandMap*)data;
     const char** commands = find_less_equals(wakeup_commands, idle_minutes);
     if (commands[0] != NULL) {
-        print_verbose_log("Wake up after %lu minute(s) idling.\n", idle_minutes);
+        print_verbose_log("*** Wake up after %lu minute(s) idling.\n", idle_minutes);
         exec_commands(commands);
     }
     delete_found_commands(commands);
@@ -186,7 +186,7 @@ static bool print_command(
     assert(command);
 
     const char* command_type = (char*)data;
-    fprintf(stdout, "%s:%lu:%s\n", command_type, minutes, command);
+    fprintf(stdout, "  %s:%lu:%s\n", command_type, minutes, command);
     return true;
 }
 
@@ -265,12 +265,15 @@ int main(int argc, char* argv[])
     set_signal_handlers();
 
     Config* config = load_config(options.config_file_path);
-
     if (options.verbose) {
         set_verbose_mode(true);
-        print_verbose_log("%s loaded.\n", options.config_file_path);
+        int n = get_num_of_entries_in_config(config);
+        print_verbose_log("*** %d %s found in %s\n",
+            n,
+            (n > 1)? "entries" : "entry",
+            options.config_file_path);
         print_config(config);
-        print_verbose_log("Watching your input...\n");
+        print_verbose_log("*** Idletimer watching your operation...\n");
     }
 
     IdleTimer* idle_timer = create_idle_timer();

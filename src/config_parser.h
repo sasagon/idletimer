@@ -29,4 +29,6 @@ typedef bool (*config_error_handler_t)(
 Config* parse_config(FILE*, const char* filename, config_error_handler_t);
 void delete_config(Config*);
 
+int get_num_of_commands_in_config(Config*);
+
 #endif
