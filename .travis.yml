@@ -1,0 +1,16 @@
+language: C
+
+compiler:
+  - gcc
+  - clang
+
+os:
+  - linux
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get -qq install libx11-dev libgtk3-dev libxss-dev libcunit1-dev
+
+before_script: autoreconf -i
+
+script: ./configure && make && make check && make distcheck
