@@ -4,12 +4,15 @@ INSTALLATION
 ## Prerequisites
 
  - X11
- - libgtk2 or libgtk3
+ - libgtk2.0 or libgtk-3
  - libxss
 
 For example, if you use APT then run below to install the development packages.
 
-    $ sudo apt-get install libx11-dev libgtk3-dev libxss-dev
+    $ sudo apt-get install libx11-dev libgtk-3-dev libxss-dev
+
+If your system do not have libgtk-3 package, you should use libgtk2.0-dev
+instead.
 
 The following tools and library are required in some cases:
 
