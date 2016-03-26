@@ -158,13 +158,14 @@ static bool config_error_handler(
 }
 
 
-static Config* load_config(const char* config_file_path)
+static Config* load_config(const char* prgname, const char* config_file_path)
 {
     assert(config_file_path);
 
     FILE* f = fopen(config_file_path, "r");
     if (f == NULL) {
-        fprintf(stderr, "Error: %s: %s\n", config_file_path, strerror(errno));
+        fprintf(stderr, "%s: Error: %s: %s\n",
+            prgname, config_file_path, strerror(errno));
         exit(EXIT_FAILURE);
     }
     Config* config = parse_config(f, config_file_path, &config_error_handler);
@@ -172,7 +173,8 @@ static Config* load_config(const char* config_file_path)
 
     if (is_command_map_empty(config->idle_commands)
      && is_command_map_empty(config->wakeup_commands)) {
-        fprintf(stderr, "Error: %s: no effective lines.\n", config_file_path);
+        fprintf(stderr, "%s: Error: %s: no effective lines.\n",
+            prgname, config_file_path);
         exit(EXIT_FAILURE);
     }
     return config;
@@ -264,7 +266,9 @@ int main(int argc, char* argv[])
     gtk_init(&argc, &argv);
     set_signal_handlers();
 
-    Config* config = load_config(options.config_file_path);
+    const gchar* prgname = g_get_prgname();
+    Config* config = load_config(prgname, options.config_file_path);
+
     if (options.verbose) {
         set_verbose_mode(true);
         int n = get_num_of_entries_in_config(config);

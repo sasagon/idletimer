@@ -1,5 +1,6 @@
-TESTS = idle_timer_test command_map_test config_parser_test
-#dist_noinst_DATA = $(TESTS)
+TESTS = idle_timer_test command_map_test config_parser_test run-test.sh
+dist_noinst_DATA = run-test.sh run-test.config
+CLEANFILES=idletimer.log idletimer.log.expected
 
 check_PROGRAMS = idle_timer_test command_map_test config_parser_test
 
