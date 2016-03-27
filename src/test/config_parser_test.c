@@ -71,7 +71,7 @@ static void test_parse_config_too_long_minutes_error()
     char test_input[1024];
     snprintf(test_input, sizeof(test_input),
         "idle:%lu:too_long_minutes\n", ULONG_MAX);
-    FILE* f = fmemopen(test_input, sizeof(test_input), "r");
+    FILE* f = fmemopen(test_input, strlen(test_input), "r");
     ErrorInfo error_info = { NO_ERROR, NULL, 0 };
 
     Config* p = parse_config(f, "test.conf", config_error_handler, &error_info);
