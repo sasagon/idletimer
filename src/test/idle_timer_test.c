@@ -39,6 +39,7 @@ static unsigned long get_repeated_idle_msec()
 
 static int prepare()
 {
+    fprintf(stderr, "prepare() called.");
     idle_timer = create_idle_timer_with_handler(get_repeated_idle_msec);
     idle_minutes = 0L;
     wakeup_minutes = 0L;
@@ -50,16 +51,19 @@ static int prepare()
 
 static void test_idle_listener()
 {
+    fprintf(stderr, "test_idle_listener() called.");
     CU_ASSERT(idle_minutes == MAX_IDLE_MINUTES);
 }
 
 static void test_wakeup_listener()
 {
+    fprintf(stderr, "test_wakeup_listener() called.");
     CU_ASSERT(wakeup_minutes == MAX_IDLE_MINUTES);
 }
 
 static int cleanup()
 {
+    fprintf(stderr, "cleanup() called.");
     delete_idle_timer(idle_timer);
     idle_timer = NULL;
     return 0;
