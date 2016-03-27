@@ -1,6 +1,6 @@
 TESTS = idle_timer_test command_map_test config_parser_test run-test.sh
 dist_noinst_DATA = run-test.sh run-test.config
-CLEANFILES=idletimer.log idletimer.log.expected
+CLEANFILES=idletimer.log idletimer.log.expected idletimer-error.log
 
 check_PROGRAMS = idle_timer_test command_map_test config_parser_test
 
