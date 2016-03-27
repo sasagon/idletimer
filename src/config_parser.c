@@ -27,6 +27,7 @@ static bool parse_line(Config* p, const char* s,
             return error_handler(TOO_SHORT_MINUTES, filename, line_number, data);
         } else if (minute == ULONG_MAX) {
             g_strfreev(t);
+            fprintf(stderr, "error_handler(TOO_LONG_MINUTES)\n");
             return error_handler(TOO_LONG_MINUTES, filename, line_number, data);
         }
         if (strcmp(t[0], "idle") == 0) {

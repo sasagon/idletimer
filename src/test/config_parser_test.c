@@ -76,6 +76,8 @@ static void test_parse_config_too_long_minutes_error()
 
     Config* p = parse_config(f, "test.conf", config_error_handler, &error_info);
 
+    fprintf(stderr, "DEBUG: test_input:%s\n", test_input);
+    fprintf(stderr, "DEBUG: error_info.error_info:%d\n", error_info.error_type);
     CU_ASSERT_EQUAL(error_info.error_type, TOO_LONG_MINUTES);
 
     fclose(f);
