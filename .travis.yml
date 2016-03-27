@@ -12,6 +12,9 @@ before_install:
   - sudo apt-get -qq install libx11-dev libgtk2.0-dev libxss-dev libcunit1-dev xdotool
 
 before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
   - autoreconf -i
 
 script:
