@@ -5,7 +5,7 @@ CLEANFILES=idletimer.log idletimer-command.log idletimer-error.log
 
 run-test-warning:
 	@echo "******************************************************"
-	@echo " Out tests may take more than 2 minutes. Please wait. "
+	@echo " Our tests may take more than 2 minutes. Please wait. "
 	@echo "******************************************************"
 
 check_PROGRAMS = idle_timer_test command_map_test config_parser_test
