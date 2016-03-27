@@ -14,3 +14,6 @@ before_install:
 before_script: autoreconf -i
 
 script: ./configure && make && make check && make distcheck
+
+addons:
+  artifacts: true
