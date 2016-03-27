@@ -2,11 +2,11 @@
 TESTDIR=`dirname $0`
 PIDFILE=/tmp/xvfb-99.pid
 
-export DISPLAY=:99.0
+export DISPLAY=:98.0
 
 /sbin/start-stop-daemon --start --quiet \
   --pidfile "$PIDFILE" --make-pidfile --background \
-  --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16
+  --exec /usr/bin/Xvfb -- :98 -ac -screen 0 1280x1024x16
 sleep 3 # give xvfb some time to start
 
 ../idletimer -v -c "${TESTDIR}/run-test.config" > idletimer.log 2> idletimer-error.log &
