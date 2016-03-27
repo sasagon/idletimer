@@ -14,10 +14,15 @@ For example, if you use APT then run below to install the development packages.
 If your system do not have libgtk-3 package, you should use libgtk2.0-dev
 instead.
 
-The following tools and library are required in some cases:
+The following tools and library are required in some cases.
 
- - autotools (if you get the source tree from git directly instead of tarball)
+ - autotools (if you get the source tree from github instead of tarball)
  - CUnit (if you want to run unit tests)
+ - xdotool (if you want to run binary execution test)
+
+For APT example below:
+
+    $ sudo apt-get install autotools-dev libcunit1-dev xdotool
 
 
 ## Compile
@@ -36,7 +41,7 @@ You can also execute
 
     $ make check
 
-to run tests if you have CUnit.
+to run tests if you have CUnit and xdotool.
 
 ## Install
 

@@ -1,8 +1,15 @@
 TESTS = idle_timer_test command_map_test config_parser_test run-test.sh
-dist_noinst_DATA = run-test.sh run-test.config
-CLEANFILES=idletimer.log idletimer.log.expected idletimer-error.log
+dist_noinst_SCRIPTS = run-test.sh
+dist_noinst_DATA = run-test.config
+CLEANFILES=idletimer.log idletimer-command.log idletimer-error.log
+
+run-test-warning:
+	@echo "******************************************************"
+	@echo " Our tests may take more than 2 minutes. Please wait. "
+	@echo "******************************************************"
 
 check_PROGRAMS = idle_timer_test command_map_test config_parser_test
+check_DATA = run-test-warning
 
 idle_timer_test_SOURCES = idle_timer_test.c
 idle_timer_test_CFLAGS = $(GTK_CFLAGS) $(X11_CFLAGS)

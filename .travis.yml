@@ -9,7 +9,7 @@ os:
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get -qq install libx11-dev libgtk2.0-dev libxss-dev libcunit1-dev
+  - sudo apt-get -qq install libx11-dev libgtk2.0-dev libxss-dev libcunit1-dev xdotool
 
 before_script:
   - "export DISPLAY=:99.0"
@@ -17,7 +17,8 @@ before_script:
   - sleep 3 # give xvfb some time to start
   - autoreconf -i
 
-script: ./configure && make && make check && make distcheck
+script:
+  - ./configure && make && make check && make distcheck
 
 addons:
   artifacts: true
