@@ -123,17 +123,17 @@ static const char* config_error_format(ConfigErrorType type)
     case NO_ERROR:
         return "";
     case TOO_LONG_LINE:
-        return "Warning: %s:%d: too long line.\n";
+        return "%s: Warning: %s:%d: too long line.\n";
     case TOO_SHORT_MINUTES:
-        return "Warning: %s:%d: 0 minute not allowed.\n";
+        return "%s: Warning: %s:%d: 0 minute not allowed.\n";
     case TOO_LONG_MINUTES:
-        return "Warning: %s:%d: too long minute specified.\n";
+        return "%s: Warning: %s:%d: too long minute specified.\n";
     case ILLEGAL_COMMAND_TYPE:
-        return "Warning: %s:%d: line must start with 'idle' or 'wakeup'.\n";
+        return "%s: Warning: %s:%d: line must start with 'idle' or 'wakeup'.\n";
     case ILLEGAL_MINUTES:
-        return "Warning: %s:%d: illegal minutes string found.\n";
+        return "%s: Warning: %s:%d: illegal minutes string found.\n";
     case ILLEGAL_LINE_FORMAT:
-        return "Warning: %s:%d: illegal line format.\n";
+        return "%s: Warning: %s:%d: illegal line format.\n";
     default:
         return NULL;
     }
@@ -148,24 +148,24 @@ static bool config_error_handler(
     const char* format = config_error_format(type);
 
     if (format != NULL) {
-        fprintf(stderr, format, filename, line_number);
+        fprintf(stderr, format, g_get_prgname(), filename, line_number);
         return true; 
     } else {
-        fprintf(stderr,
-            "Error: %s:%d: unknown error.\n", filename, line_number);
+        fprintf(stderr, "%s: Error: %s:%d: unknown error.\n",
+            g_get_prgname(), filename, line_number);
         return false;
     }
 }
 
 
-static Config* load_config(const char* prgname, const char* config_file_path)
+static Config* load_config(const char* config_file_path)
 {
     assert(config_file_path);
 
     FILE* f = fopen(config_file_path, "r");
     if (f == NULL) {
         fprintf(stderr, "%s: Error: %s: %s\n",
-            prgname, config_file_path, strerror(errno));
+            g_get_prgname(), config_file_path, strerror(errno));
         exit(EXIT_FAILURE);
     }
     Config* config = parse_config(
@@ -175,7 +175,7 @@ static Config* load_config(const char* prgname, const char* config_file_path)
     if (is_command_map_empty(config->idle_commands)
      && is_command_map_empty(config->wakeup_commands)) {
         fprintf(stderr, "%s: Error: %s: no effective lines.\n",
-            prgname, config_file_path);
+            g_get_prgname(), config_file_path);
         exit(EXIT_FAILURE);
     }
     return config;
@@ -202,7 +202,7 @@ static void print_config(const Config* config)
 }
 
 
-static void print_usage(const char* prgname)
+static void print_usage()
 {
     fprintf(
         stderr,
@@ -217,7 +217,7 @@ static void print_usage(const char* prgname)
         "Version:\n"
         "  %s"
         "\n",
-        prgname, DOTFILE_NAME, VERSION);
+        g_get_prgname(), DOTFILE_NAME, VERSION);
 }
 
 
@@ -257,18 +257,17 @@ Options parse_commandline_options(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-    Options options = parse_commandline_options(argc, argv);
-
-    if (options.help) {
-        print_usage(argv[0]);
-        exit(EXIT_FAILURE);
-    }
-
     gtk_init(&argc, &argv);
     set_signal_handlers();
 
-    const gchar* prgname = g_get_prgname();
-    Config* config = load_config(prgname, options.config_file_path);
+    Options options = parse_commandline_options(argc, argv);
+
+    if (options.help) {
+        print_usage();
+        exit(EXIT_FAILURE);
+    }
+
+    Config* config = load_config(options.config_file_path);
 
     if (options.verbose) {
         set_verbose_mode(true);
