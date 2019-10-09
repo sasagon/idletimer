@@ -31,6 +31,6 @@ Config* parse_config(
 
 void delete_config(Config*);
 
-int get_num_of_commands_in_config(Config*);
+int get_num_of_entries_in_config(Config*);
 
 #endif

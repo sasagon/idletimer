@@ -27,14 +27,17 @@ For APT example below:
 
 ## Compile
 
-Just run `configure` script and `make` command like below:
+If you get the source tree from tarball,
+just run `configure` script and `make` command like below:
 
     $ ./configure
     $ make
 
 If you get the source tree from git directly instead of tarball,
-you must execute `autoreconf` command in autotools before running `configure`.
+you must execute `automake` and `autoreconf` command in autotools
+before running `configure`.
 
+    $ automake --add-missing
     $ autoreconf -v
 
 You can also execute

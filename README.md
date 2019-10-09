@@ -17,7 +17,7 @@ or
 
 for background.
 
-`~/.idletimer` contains one or more lines which consist of 3 itmes below:
+`~/.idletimer` contains one or more lines which consist of 3 items below:
 
   - execution type (`idle` or `wakeup`)
   - idling minute(s)
