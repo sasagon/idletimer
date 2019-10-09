@@ -18,11 +18,11 @@ The following tools and library are required in some cases.
 
  - autotools (if you get the source tree from github instead of tarball)
  - CUnit (if you want to run unit tests)
- - xdotool (if you want to run binary execution test)
+ - xdotool, xvfb (if you want to run binary execution test)
 
 For APT example below:
 
-    $ sudo apt-get install autotools-dev libcunit1-dev xdotool
+    $ sudo apt-get install autotools-dev libcunit1-dev xdotool xvfb
 
 
 ## Compile
