@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
         CU_TEST_INFO_NULL
     };
     CU_SuiteInfo suites[] = {
-        { "CommandMap", NULL, NULL, tests },
+        { "CommandMap", NULL, NULL, NULL, NULL, tests },
         CU_SUITE_INFO_NULL
     };
 

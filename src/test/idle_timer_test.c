@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
+#include <gtk/gtk.h>
 #include "../idle_timer.h"
 
 #define MAX_IDLE_MINUTES 3
@@ -74,7 +75,7 @@ int main(int argc, char* argv[])
         CU_TEST_INFO_NULL
     };
     CU_SuiteInfo suites[] = {
-        { "IdleTimer", prepare, cleanup, tests },
+        { "IdleTimer", prepare, cleanup, NULL, NULL, tests },
         CU_SUITE_INFO_NULL
     };
 

@@ -4,6 +4,11 @@ PIDFILE=/tmp/xvfb-99.pid
 
 export DISPLAY=:98.0
 
+if [ ! -x /usr/bin/Xvfb ]; then
+  echo "/usr/bin/Xvfb not found. Execution test skipped."
+  exit 77
+fi
+
 /sbin/start-stop-daemon --start --quiet \
   --pidfile "$PIDFILE" --make-pidfile --background \
   --exec /usr/bin/Xvfb -- :98 -ac -screen 0 1280x1024x16
