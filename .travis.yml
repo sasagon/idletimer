@@ -12,12 +12,12 @@ before_install:
   - sudo apt-get -qq install libx11-dev libgtk2.0-dev libxss-dev libcunit1-dev xdotool xvfb
 
 before_script:
-  - "export DISPLAY=:99.0"
-  - "/sbin/start-stop-daemon --start --quiet --background --exec /usr/bin/Xvfb" # start xvfb for idle_timer_test
+  - sudo /sbin/start-stop-daemon --start --quiet --background --exec /usr/bin/Xvfb :99 # start xvfb for idle_timer_test
   - sleep 3 # give xvfb some time to start
   - autoreconf -i
 
 script:
+  - export DISPLAY=:99.0
   - ./configure && make && make check && make distcheck
 
 addons:
